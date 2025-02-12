@@ -5,6 +5,8 @@ import NavBar from './components/NavBar'
 import ViewPaste from './components/ViewPaste'
 import Pastes from './components/Pastes'
 import Footer from './components/Footer'
+import PageNotFound from './components/PageNotFound'
+import Navbar from './components/NavBar'
 
 const router = createBrowserRouter(
   [
@@ -27,11 +29,20 @@ const router = createBrowserRouter(
       </div>
     },
     {
-      path: '/pastes/:id',
+      path: '/view/:id',
       element: 
       <div>
         <NavBar/>
         <ViewPaste/>
+        <Footer/>
+      </div>
+    },
+    {
+      path: '*',
+      element: 
+      <div>
+        <Navbar/>
+        <PageNotFound/>
         <Footer/>
       </div>
     },
@@ -40,7 +51,7 @@ const router = createBrowserRouter(
 
 const App = () => {
   return (
-    <div>
+    <div className='w-full h-screen'>
       <RouterProvider router={router}/>
     </div>
   )

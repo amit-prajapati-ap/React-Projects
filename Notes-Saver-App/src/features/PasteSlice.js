@@ -30,6 +30,7 @@ const UpdateToPastes = (state, action) => {
 const ResetAllPastes = (state) => {
     state.pastes = []
     localStorage.removeItem("pastes")
+    toast.success("All Paste Removed")
 }
 
 const RemoveFromPastes = (state, action) => {
