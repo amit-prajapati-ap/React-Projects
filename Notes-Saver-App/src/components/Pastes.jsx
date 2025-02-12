@@ -30,27 +30,25 @@ const Pastes = () => {
   const filteredDataDisplay = () => {
     if (filteredData.length > 0) {
       return (
-        <div>
+        <div className="flex flex-col gap-4">
           {filteredData.map((paste) => {
             return (
               <div
                 key={paste?._id}
-                className="w-full flex justify-between gap-3 p-3 border border-gray-500 rounded-sm bg-zinc-950"
+                className="w-full flex flex-col sm:flex-row justify-between gap-3 p-3 border border-gray-500 rounded-sm bg-zinc-950"
               >
-                <div className="flex flex-col w-full max-w-[70%]">
-                  <div className="text-xl font-bold">{paste.title}</div>
-                  <div className="text-[10px]">{paste.content}</div>
+                <div className="flex flex-col w-full sm:max-w-[50%] md:max-w-[70%]">
+                  <div className="text-xl font-bold sm:text-left text-center">{paste.title}</div>
+                  <div className="text-[10px] sm:block hidden">{paste.content}</div>
                 </div>
-                <div className="w-full max-w-[30%] flex flex-col gap-2 items-end">
-                  <div className="flex gap-1">
-                    <button className="border border-gray-600 transition-all duration-300 hover:text-blue-500 cursor-pointer p-1.5 rounded-sm">
-                      <a href={`/?pasteId=${paste?._id}`}>
+                <div className="w-full sm:max-w-[30%] flex flex-col gap-2 items-center sm:items-end">
+                  <div className="flex gap-3 sm:gap-1">
+                      <Link to={`/?pasteId=${paste?._id}`} className="border border-gray-600 transition-all duration-300 hover:text-blue-500 cursor-pointer p-1.5 rounded-sm flex items-center justify-center px-2.5">
                         {" "}
                         <FiEdit size={12} />{" "}
-                      </a>
-                    </button>
+                      </Link>
                     <button
-                      className="border border-gray-600 transition-all duration-300 hover:text-red-500 cursor-pointer p-1.5 rounded-sm"
+                      className="border border-gray-600 transition-all duration-300 hover:text-red-500 cursor-pointer p-1.5 rounded-sm px-2.5"
                       onClick={() => DeletePaste(paste?._id)}
                     >
                       <FiTrash size={12} />
@@ -58,14 +56,14 @@ const Pastes = () => {
                     <button>
                       <Sharing title={paste.title} content={paste.content} paste={paste}/>
                     </button>
-                    <button className="border border-gray-600 transition-all duration-300 hover:text-gray-500 cursor-pointer p-1.5 rounded-sm">
-                      <a href={`/view/${paste?._id}`}>
+                    <button className="border border-gray-600 transition-all duration-300 hover:text-gray-500 cursor-pointer p-1.5 rounded-sm px-2.5">
+                      <Link to={`/view/${paste?._id}`}>
                         {" "}
                         <FiEye size={12} />{" "}
-                      </a>
+                      </Link>
                     </button>
                     <button
-                      className="border border-gray-600 transition-all duration-300 hover:text-blue-500 cursor-pointer p-1.5 rounded-sm"
+                      className="border border-gray-600 transition-all duration-300 hover:text-blue-500 cursor-pointer p-1.5 rounded-sm px-2.5"
                       onClick={() => Copying(paste.content)}
                     >
                       <FiCopy size={12} />
@@ -96,7 +94,7 @@ const Pastes = () => {
   let element = filteredDataDisplay();
 
   return (
-    <div className="w-full h-full p-5">
+    <div className="w-full h-[80vh] p-5">
       <div className="flex flex-col gap-4 w-[80%] mx-auto">
         <div className="flex items-center justify-start gap-3 border rounded-md py-2 px-4 border-gray-600">
           <FaSearch className="text-gray-500" size={15} />
@@ -113,7 +111,7 @@ const Pastes = () => {
           <div className="px-4 py-2.5 border-b border-gray-500 text-2xl font-bold">
             All Pastes
           </div>
-          <div className="p-4 flex flex-col gap-4">{element}</div>
+          <div className="p-4 flex flex-col gap-4 max-h-[50vh] overflow-y-auto">{element}</div>
         </div>
         <div className="self-center">
           {filteredData.length > 0 ? <Button

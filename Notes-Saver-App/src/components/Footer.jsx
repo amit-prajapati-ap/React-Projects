@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="bg-black text-white py-6 fixed bottom-0 w-screen">
+    <footer className="bg-black text-white py-6">
       <div className="max-w-6xl mx-auto text-center">
         {/* Social Media Icons */}
         <div className="flex justify-center space-x-6 mb-4">

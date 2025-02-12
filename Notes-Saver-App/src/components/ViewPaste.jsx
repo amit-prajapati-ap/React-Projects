@@ -15,6 +15,7 @@ const ViewPaste = () => {
     navigator.clipboard.writeText(value);
   };
   return (
+    <div className=" h-[80vh] bg-slate-950 -mt-6">
     <div className="w-full max-w-[80vw] mx-auto my-6 flex flex-col items-center">
       <div className="bg-gray-800 rounded-lg my-4 shadow-md w-full">
         {/* Header with Copy Icon */}
@@ -36,6 +37,7 @@ const ViewPaste = () => {
           />
         </div>
       </div>
+    </div>
     </div>
   );
 };

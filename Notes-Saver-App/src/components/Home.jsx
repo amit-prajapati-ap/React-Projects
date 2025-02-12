@@ -64,7 +64,7 @@ const Home = () => {
   }, [pasteId]);
 
   return (
-    <div className="w-full max-w-[80vw] mx-auto my-6 flex flex-col items-center">
+    <div className="w-full max-w-[80vw] mx-auto my-6 flex flex-col items-center h-[70vh] mb-16">
       <div className="flex w-full items-center space-x-2">
         <Input
           type="text"
@@ -72,6 +72,7 @@ const Home = () => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="border border-gray-700 outline-gray-500"
+          maxLength='20'
         />
         <Button
           onClick={createPaste}
@@ -96,8 +97,9 @@ const Home = () => {
             value={value}
             placeholder="Enter Content Here..."
             onChange={(e) => setValue(e.target.value)}
-            rows={20}
-            className="w-full resize-none bg-white text-black p-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            rows={15}
+            maxLength={1000}
+            className="w-full h-fit resize-none bg-white text-black p-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
