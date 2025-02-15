@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import Sharing from "./Sharing";
 
 const Pastes = () => {
-  const pastes = useSelector((state) => state.pastes);
+  const pastes = useSelector((state) => state.pastes.pastes);
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -95,7 +95,7 @@ const Pastes = () => {
 
   return (
     <div className="w-full h-[80vh] p-5">
-      <div className="flex flex-col gap-4 w-[80%] mx-auto">
+      <div className="flex flex-col gap-4 sm:w-[80%] mx-auto">
         <div className="flex items-center justify-start gap-3 border rounded-md py-2 px-4 border-gray-600">
           <FaSearch className="text-gray-500" size={15} />
           <input

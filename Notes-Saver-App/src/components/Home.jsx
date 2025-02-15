@@ -64,7 +64,7 @@ const Home = () => {
   }, [pasteId]);
 
   return (
-    <div className="w-full max-w-[80vw] mx-auto my-6 flex flex-col items-center h-[70vh] mb-16">
+    <div className="w-full max-w-[90vw] sm:max-w-[80vw] mx-auto my-6 flex flex-col items-center h-[70vh] mb-16">
       <div className="flex w-full items-center space-x-2">
         <Input
           type="text"

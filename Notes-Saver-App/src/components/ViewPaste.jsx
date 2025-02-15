@@ -9,14 +9,13 @@ const ViewPaste = () => {
   const allPastes = useSelector((state) => state.pastes);
 
   const paste = allPastes.filter((p) => p._id === id)[0];
-  console.log(paste);
   // Copy to clipboard function
   const copyToClipboard = () => {
     navigator.clipboard.writeText(value);
   };
   return (
     <div className=" h-[80vh] bg-slate-950 -mt-6">
-    <div className="w-full max-w-[80vw] mx-auto my-6 flex flex-col items-center">
+    <div className="w-full max-w-[90vw] sm:max-w-[80vw] mx-auto my-6 flex flex-col items-center">
       <div className="bg-gray-800 rounded-lg my-4 shadow-md w-full">
         {/* Header with Copy Icon */}
         <div className="m-4 pb-2 flex justify-between items-center mb-2">

@@ -7,6 +7,7 @@ import Pastes from './components/Pastes'
 import Footer from './components/Footer'
 import PageNotFound from './components/PageNotFound'
 import Navbar from './components/NavBar'
+import AuthForm from './components/AuthForm'
 
 const router = createBrowserRouter(
   [
@@ -38,6 +39,15 @@ const router = createBrowserRouter(
       </div>
     },
     {
+      path: '/auth',
+      element: 
+      <div>
+        <NavBar/>
+        <AuthForm/>
+        <Footer/>
+      </div>
+    },
+    {
       path: '*',
       element: 
       <div>
@@ -51,7 +61,7 @@ const router = createBrowserRouter(
 
 const App = () => {
   return (
-    <div className='w-full h-screen bg-slate-950'>
+    <div className='w-full max-w-[1440px] h-screen mx-auto'>
       <RouterProvider router={router}/>
     </div>
   )

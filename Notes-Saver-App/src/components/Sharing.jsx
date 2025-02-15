@@ -2,10 +2,12 @@ import { useState } from "react";
 import { FiX, FiCopy } from "react-icons/fi";
 import { AiOutlineLink } from "react-icons/ai";
 import { FaTelegramPlane, FaWhatsapp, FaFacebook } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 const Sharing = ({ title, content, paste }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const shareUrl = window.location.href + `/${paste?._id}`;
+  const [isCopied, setIsCopied] = useState(false)
+  const shareUrl = (window.location.href).replace('/pastes', "") + `/view/${paste?._id}`;
 
   const handleNativeShare = async () => {
     if (navigator.share) {
@@ -26,7 +28,8 @@ const Sharing = ({ title, content, paste }) => {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareUrl);
-    alert("Link copied to clipboard!");
+    setIsCopied(true)
+    toast.success("Copied")
   };
 
   return (
@@ -40,7 +43,7 @@ const Sharing = ({ title, content, paste }) => {
 
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/10 backdrop-blur-sm shadow-2xl shadow-gray-900">
-          <div className="bg-gray-900 text-white p-4 rounded-md shadow-lg w-96">
+          <div className="bg-gray-900 text-white p-4 rounded-md shadow-lg sm:w-96">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold">Share link</h3>
               <button className="cursor-pointer rounded-full hover:bg-zinc-950 p-4 transition-all duration-300" onClick={() => setIsOpen(false)}>
@@ -61,7 +64,8 @@ const Sharing = ({ title, content, paste }) => {
               />
               <button
                 onClick={handleCopy}
-                className="ml-2 text-gray-400 hover:text-white cursor-pointer"
+                className={isCopied ? "ml-2 text-gray-400 cursor-not-allowed" : "ml-2 text-gray-400 hover:text-white cursor-pointer"}
+                disabled={isCopied}
               >
                 <FiCopy size={18} />
               </button>
