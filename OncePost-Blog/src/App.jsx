@@ -1,11 +1,39 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import authService from './appwrite/auth'
+import { login, logout } from './store/authSlice'
+import {Header, Footer} from './components'
 
 const App = () => {
+  const [loading, setLoading] = useState(true)
+  const dispatch = useDispatch()
 
-  return (
-    <div className='w-full h-screen bg-gray-950 text-white'>
-      Hello Duniya
+  useEffect(() => {
+    authService.getCurrentUser()
+    .then((userData) => {
+      if (userData) {
+        dispatch(login({userData}))
+      }
+      else {
+        dispatch(logout())
+      }
+    })
+    .finally(() => setLoading(false))
+  }, [])
+  
+
+  return !loading ? (
+    <div className='min-h-screen flex flex-wrap bg-gray-950  text-white'>
+      <div className='w-full block' >
+        <Header/>
+        <main>
+          TODO: {/* <Outlet/> */}
+        </main>
+        {/* <Footer logo="OncePost"/> */}
+      </div>
     </div>
+  ) : (
+    <div>Loading...</div>
   )
 }
 
