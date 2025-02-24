@@ -23,13 +23,13 @@ const App = () => {
   
 
   return !loading ? (
-    <div className='min-h-screen flex flex-wrap bg-gray-950  text-white'>
+    <div className='min-h-screen flex flex-wrap'>
       <div className='w-full block' >
         <Header/>
         <main>
           TODO: {/* <Outlet/> */}
         </main>
-        {/* <Footer logo="OncePost"/> */}
+        <Footer logo="OncePost"/>
       </div>
     </div>
   ) : (
