@@ -10,7 +10,7 @@ export default function Post() {
   const { slug } = useParams();
   const navigate = useNavigate();
 
-  const userData = useSelector((state) => state.auth.userData);
+  const userData = useSelector((state) => state.authSlice.userData);
 
   const isAuthor = post && userData ? post.userId === userData.$id : false;
 
@@ -45,11 +45,11 @@ export default function Post() {
           {isAuthor && (
             <div className="absolute right-6 top-6">
               <Link to={`/edit-post/${post.$id}`}>
-                <Button bgColor="bg-green-500" className="mr-3">
+                <Button bgColor="bg-green-500" className="mr-3 cursor-pointer">
                   Edit
                 </Button>
               </Link>
-              <Button bgColor="bg-red-500" onClick={deletePost}>
+              <Button bgColor="bg-red-500" className="cursor-pointer" onClick={deletePost}>
                 Delete
               </Button>
             </div>
@@ -58,7 +58,9 @@ export default function Post() {
         <div className="w-full mb-6">
           <h1 className="text-2xl font-bold">{post.title}</h1>
         </div>
-        <div className="browser-css">{parse(post.content)}</div>
+        <div className="browser-css">
+        {post.content}
+        </div>
       </Container>
     </div>
   ) : null;

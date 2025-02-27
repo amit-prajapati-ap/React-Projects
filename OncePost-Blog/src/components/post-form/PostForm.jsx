@@ -6,18 +6,25 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const PostForm = ({ post }) => {
-  const { register, handleSubmit, watch, setValue, control, getValues } =
-    useForm({
-      defaultValues: {
-        title: post?.title || "",
-        slug: post?.slug || "",
-        content: post?.content || "",
-        status: post?.status || "active",
-      },
-    });
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    control,
+    getValues,
+    formState: { isSubmitting },
+  } = useForm({
+    defaultValues: {
+      title: post?.title || "",
+      slug: post?.slug || "",
+      content: post?.content || "",
+      status: post?.status || "active",
+    },
+  });
 
   const navigate = useNavigate();
-  const userData = useSelector((state) => state.user.userData);
+  const userData = useSelector((state) => state.authSlice.userData);
 
   const submit = async (data) => {
     if (post) {
@@ -60,8 +67,7 @@ const PostForm = ({ post }) => {
       return value
         .trim()
         .toLowerCase()
-        .replace(/^[a-zA-Z\d\s]+/g, "-")
-        .replace(/\s/g, "-");
+        .replace(/\s/g, "_");
     }
 
     return "";
@@ -92,6 +98,8 @@ const PostForm = ({ post }) => {
           label="Slug :"
           placeholder="Slug"
           className="mb-4"
+          disabled={true}
+          value={post && slugTransform(post.title)}
           {...register("slug", { required: true })}
           onInput={(e) => {
             setValue("slug", slugTransform(e.currentTarget.value), {
@@ -132,9 +140,10 @@ const PostForm = ({ post }) => {
         <Button
           type="submit"
           bgColor={post ? "bg-green-500" : undefined}
-          className="w-full"
+          className="w-full cursor-pointer"
+          disabled={isSubmitting}
         >
-          {post ? "Update" : "Submit"}
+          {isSubmitting ? (post ? "Updating..." : "Submitting...") : (post ? "Update" : "Submit")}
         </Button>
       </div>
     </form>

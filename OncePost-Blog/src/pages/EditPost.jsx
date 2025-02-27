@@ -4,7 +4,7 @@ import { Container, PostForm } from '../components'
 import appwriteService from '../appwrite/config'
 
 const EditPost = () => {
-    const [posts, setPosts] = useState([])
+    const [post, setPosts] = useState([])
     const {slug} = useParams()
     const navigate = useNavigate()
 
@@ -20,13 +20,14 @@ const EditPost = () => {
             navigate('/')
         }
     }, [slug, navigate])
-  return post ? (
+    
+  return post.length != 0 ? (
     <div className='py-8'>
         <Container>
-            <PostForm post={posts}/>
+        <PostForm post={post}/>
         </Container>
     </div>
-  ) : null
+  ) : <div>Loading...</div>
 }
 
 export default EditPost

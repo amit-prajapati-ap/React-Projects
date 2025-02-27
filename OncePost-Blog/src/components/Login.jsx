@@ -9,7 +9,11 @@ import { useForm } from "react-hook-form";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { register, handleSubmit } = useForm();
+  const {
+      register,
+      handleSubmit,
+      formState: { isSubmitting },
+    } = useForm();
   const [error, setError] = useState("");
   const login = async (data) => {
     setError("");
@@ -71,7 +75,9 @@ const Login = () => {
                 required: true,
               })}
             />
-            <Button type='submit' className='w-full' >Sign in</Button>
+            <Button type='submit' className='w-full' disabled={isSubmitting} >
+            {isSubmitting ? 'Logging...' : 'Login'}
+            </Button>
           </div>
         </form>
       </div>
