@@ -6,7 +6,7 @@ import { Textarea } from "./ui/textarea";
 
 const ViewPaste = () => {
   const { id } = useParams();
-  const allPastes = useSelector((state) => state.pastes);
+  const allPastes = useSelector((state) => state.PasteSlice.pastes);
 
   const paste = allPastes.filter((p) => p._id === id)[0];
   // Copy to clipboard function

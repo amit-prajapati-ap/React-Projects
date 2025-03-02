@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { nanoid } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -11,15 +11,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { FaRegCopy } from "react-icons/fa6";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
+import { emailVerify } from "@/features/UserAuthSLice";
 
 const Home = () => {
-  const allPastes = useSelector((state) => state.pastes);
+  const navigate = useNavigate();
+  const allPastes = useSelector((state) => state.PasteSlice.pastes);
   const [title, setTitle] = useState("");
   const [value, setValue] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const pasteId = searchParams.get("pasteId");
   const dispatch = useDispatch();
+  const { authStatus, signupStatus, user } = useSelector(
+    (state) => state.userAuth.userInfo
+  );
+
+  const authState = authStatus && signupStatus;
 
   // Copy to clipboard function
   const copyToClipboard = () => {
@@ -27,9 +34,19 @@ const Home = () => {
   };
 
   const createPaste = () => {
-    if(!title || !value) {
-      toast.error("Please Fill the Title and Content")
-      return
+    if (!authState) {
+      toast.error("Please Login for Creating the Paste");
+      navigate("/login");
+      return;
+    }
+    if (!title || !value) {
+      toast.error("Please Fill the Title and Content");
+      return;
+    }
+    if (!user.emailVerified) {
+      toast.error("Check Your Mail and Verify Your Email ID");
+      dispatch(emailVerify()).unwrap();
+      return;
     }
     const paste = {
       title: title,
@@ -39,7 +56,7 @@ const Home = () => {
         month: "long",
         day: "numeric",
         year: "numeric",
-      })
+      }),
     };
 
     if (pasteId) {
@@ -53,6 +70,20 @@ const Home = () => {
     setTitle("");
     setValue("");
     setSearchParams("");
+  };
+
+  const resetPastes = () => {
+    if (!authState) {
+      toast.error("Please Login for Reset all Pastes");
+      navigate("/login");
+      return;
+    }
+    if (!user.emailVerified) {
+      toast.error("Check Your Mail and Please Verify Your Email ID");
+      dispatch(emailVerify()).unwrap();
+      return;
+    }
+    dispatch(resetAllPastes());
   };
 
   useEffect(() => {
@@ -72,7 +103,7 @@ const Home = () => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="border border-gray-700 outline-gray-500"
-          maxLength='20'
+          maxLength="20"
         />
         <Button
           onClick={createPaste}
@@ -103,7 +134,12 @@ const Home = () => {
           />
         </div>
       </div>
-      <Button onClick={() => dispatch(resetAllPastes())} className='px-8 bg-blue-600 hover:bg-blue-700 cursor-pointer transition-all duration-300 text-white'>Reset</Button>
+      <Button
+        onClick={resetPastes}
+        className="px-8 bg-blue-600 hover:bg-blue-700 cursor-pointer transition-all duration-300 text-white"
+      >
+        Reset
+      </Button>
     </div>
   );
 };

@@ -4,21 +4,28 @@ import { removeFromPastes, resetAllPastes } from "../features/PasteSlice";
 import toast from "react-hot-toast";
 import { FaSearch } from "react-icons/fa";
 import { AiOutlineCalendar } from "react-icons/ai";
-import { FiEdit, FiTrash, FiUpload, FiEye, FiCopy } from "react-icons/fi";
+import { FiEdit, FiTrash, FiEye, FiCopy } from "react-icons/fi";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 import Sharing from "./Sharing";
+import { emailVerify } from "@/features/UserAuthSLice";
 
 const Pastes = () => {
-  const pastes = useSelector((state) => state.pastes.pastes);
+  const pastes = useSelector((state) => state.PasteSlice.pastes);
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
+  const { user } = useSelector((state) => state.userAuth.userInfo);
 
   const filteredData = pastes.filter((paste) =>
     paste.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const DeletePaste = (pasteId) => {
+    if (!user.emailVerified) {
+      toast.success("Check Your Mail and Please Verify Your Email ID");
+      dispatch(emailVerify()).unwrap();
+      return;
+    }
     dispatch(removeFromPastes(pasteId));
   };
 

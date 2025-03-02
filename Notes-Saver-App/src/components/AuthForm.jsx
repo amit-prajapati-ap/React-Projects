@@ -1,29 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { BiLogoGoogle, BiLogoGithub } from "react-icons/bi";
 import { useDispatch } from "react-redux";
+import PasswordReset from "./PasswordReset";
 import {
-  SignInGithub,
-  SignInGoogle,
-  SignInEmail,
-  SignUp,
+  emailLogin,
+  emailSignup,
+  githubLogin,
+  googleLogin,
 } from "../features/UserAuthSLice";
 
 // -----Styling Start-----
-const move = keyframes`
-  0%{
-      opacity:0;
-  
-  }
-  95%{
-      opacity:1;
-  
-  }
 
-  `;
+const move = keyframes`
+    0%{
+        opacity:0;
+    
+    }
+    95%{
+        opacity:1;
+    
+    }
+
+    `;
 const BackgroundBox = styled.div`
   background-color: #beeefb;
-  height: 60%;
+  height: 600px;
   width: 80%;
 
   display: flex;
@@ -38,6 +40,7 @@ const BackgroundBox = styled.div`
   border: 1px solid #053271;
 
   .text1 {
+    display: ${(props) => (props.windowWidth < 1024 ? "none" : "flex")};
     z-index: ${(props) => (props.clicked ? "-700" : "700")};
     transform: ${(props) =>
       props.clicked ? "translateX(0)" : "translateX(100%)"};
@@ -46,6 +49,7 @@ const BackgroundBox = styled.div`
   }
 
   .text2 {
+    display: ${(props) => (props.windowWidth < 1024 ? "none" : "flex")};
     z-index: ${(props) => (props.clicked ? "700" : "-700")};
     animation: ${(props) => (props.clicked ? "none" : move)} 1.5s;
 
@@ -57,7 +61,7 @@ const BackgroundBox = styled.div`
   .signin {
     position: absolute;
     top: 0%;
-    left: 30%;
+    left: ${(props) => (props.windowWidth < 1024 ? 50 : 30)}%;
     text-align: center;
     z-index: ${(props) => (props.clicked ? "-600" : "500")};
     transform: ${(props) => (props.clicked ? "none" : "translateX(-50%)")};
@@ -66,7 +70,7 @@ const BackgroundBox = styled.div`
   .signup {
     position: absolute;
     top: 0%;
-    right: 30%;
+    right: ${(props) => (props.windowWidth < 1024 ? 50 : 30)}%;
     text-align: center;
     z-index: ${(props) => (props.clicked ? "500" : "-500")};
     transform: ${(props) => (props.clicked ? "translateX(50%)" : "none")};
@@ -76,14 +80,20 @@ const BackgroundBox = styled.div`
 
 const Box1 = styled.div`
   background-color: #f1fdcd;
-  width: 50%;
+  width: ${(props) => (props.windowWidth < 1024 ? 80 : 50)}%;
   height: 100%;
-  position: absolute;
+  position: ${(props) => (props.windowWidth < 1024 ? "relative" : "absolute")};
   left: 0;
   top: 0;
 
   transform: ${(props) =>
-    props.clicked ? "translateX(90%)" : "translateX(10%)"};
+    props.clicked
+      ? props.windowWidth > 1024
+      ? "translateX(90%)"
+      : "translateX(0%)"
+      : props.windowWidth > 1024
+      ? "translateX(10%)"
+      : "translateX(0%)"};
 
   transition: transform 1s;
 
@@ -120,6 +130,7 @@ const Box2 = styled.div`
   position: absolute;
   right: 0;
   top: 0;
+  display: ${(props) => (props.windowWidth < 1024 ? "none" : "block")};
 
   z-index: 600;
   transform: ${(props) =>
@@ -138,6 +149,7 @@ const Form = styled.form`
   justify-content: center;
   height: 100%;
   padding: 0 4rem;
+  width: 100%;
 
   /* z-index: 100; */
 `;
@@ -146,6 +158,7 @@ const Input = styled.input`
   background-color: #fff;
   border: none;
   border-bottom: 2px solid #053271;
+  border-radius: 8px;
 
   padding: 1rem 1rem;
   margin: 0.5rem 0;
@@ -163,7 +176,7 @@ const Button = styled.button`
   padding: 1rem 3.5rem;
   margin-top: 1rem;
   border: 1px solid black;
-  background-color: black;
+  background-color: #1438db;
   color: #fff;
   text-transform: uppercase;
   cursor: pointer;
@@ -205,6 +218,7 @@ const ButtonAnimate = styled.button`
   top: 70%;
   border: none;
   cursor: pointer;
+  display: ${(props) => (props.windowWidth < 1024 ? "none" : "block")};
 
   right: ${(props) => (props.clicked ? "52%" : "42%")};
 
@@ -241,7 +255,7 @@ const Text = styled.div`
   .attention-icon {
     position: absolute;
     right: ${(props) => (props.clicked ? "0" : "none")};
-    top: 100%;
+    top: 110%;
     font-size: 5rem;
   }
 `;
@@ -249,42 +263,61 @@ const Text = styled.div`
 
 function FormComponent() {
   const [click, setClick] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("Amit");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const SignUpUser = (e) => {
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, [window.innerWidth]);
+
+  const SignUpUser = async (e) => {
     e.preventDefault();
     if (password === confirmPassword) {
-      dispatch(SignUp({ email, password }));
-      console.log("signup");
-    } else console.log("Error");
+      await dispatch(emailSignup({ email, password, name })).unwrap();
+    } else console.log("Password is not equal to ConfirmPassword");
   };
 
-  const signInWithEmailUser = (e) => {
+  const signInWithEmailUser = async (e) => {
     e.preventDefault();
-    dispatch(SignInEmail({ email, password }));
+    await dispatch(emailLogin({ email, password })).unwrap();
   };
 
-  const signInWithGoogleUser = (e) => {
+  const signInWithGoogleUser = async (e) => {
     e.preventDefault();
-    dispatch(SignInGoogle());
+    setIsOpen(false);
+    await dispatch(googleLogin()).unwrap();
   };
 
-  const signInWithGithubUser = (e) => {
+  const signInWithGithubUser = async (e) => {
     e.preventDefault();
-    dispatch(SignInGithub());
+    setIsOpen(false);
+    await dispatch(githubLogin()).unwrap();
   };
 
-  const handleClick = () => setClick(!click);
+  const handleClick = () => {
+    setClick(!click);
+    setIsOpen(false);
+  };
   return (
-    <div className="h-screen lg:h-[60vh] xl:h-[45vh] 2xl:h-[40vh] w-full bg-gray-950 z-10">
+    <div className="lg:h-[620px] my-22 w-full bg-gray-950 z-1">
       {" "}
-      <BackgroundBox clicked={click}>
-        <ButtonAnimate clicked={click} onClick={handleClick}></ButtonAnimate>
+      <BackgroundBox clicked={click} windowWidth={windowWidth}>
+        <ButtonAnimate
+          clicked={click}
+          onClick={handleClick}
+          windowWidth={windowWidth}
+        ></ButtonAnimate>
 
-        <Form className="signin max-w-[500px]">
+        <Form className="signin max-w-[500px]" windowWidth={windowWidth}>
           <Title>Login</Title>
           <Input
             type="email"
@@ -304,12 +337,18 @@ function FormComponent() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <Link
-            href="#"
-            className="hover:text-blue-600 transition-all duration-300"
-          >
-            Forgot Your Password?
-          </Link>
+          <div className="flex flex-col my-2">
+            <Link className="hover:text-blue-600 hover:underline transition-all duration-300">
+              <PasswordReset isOpen={isOpen} setIsOpen={setIsOpen} />
+            </Link>
+            {windowWidth < 1024 && (
+              <p className="sm:text-2xl text-lg">
+                Don't have an account?{" "}
+                <span onClick={handleClick} className="text-blue-600 hover:text-blue-500 hover:underline transition-all duration-300">Register</span>
+              </p>
+            )}
+          </div>
+
           <Button
             type="submit"
             onClick={signInWithEmailUser}
@@ -317,6 +356,7 @@ function FormComponent() {
           >
             Sign In
           </Button>
+
           <div className="mt-4 flex gap-4">
             <button type="submit" onClick={signInWithGoogleUser}>
               <BiLogoGoogle size={48} className="cursor-pointer" />
@@ -328,47 +368,44 @@ function FormComponent() {
         </Form>
 
         <Form className="signup max-w-[500px]">
-          <Title>Sign Up</Title>
+          <Title>Signup</Title>
 
-          <div className="flex flex-col lg:flex-row gap-4">
-            <Input
-              type="text"
-              name="name"
-              id="name"
-              placeholder="Name"
-              className="text-lg"
-            />
+          <Input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="Name"
+            className="text-lg"
+            onChange={(e) => setName(e.target.value)}
+          />
 
-            <Input
-              type="email"
-              name="email"
-              id="emailIdSignup"
-              placeholder="Email"
-              className="text-lg"
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="flex flex-col lg:flex-row gap-4">
-            <Input
-              type="password"
-              name="password"
-              id="passwordIdSignup"
-              placeholder="Set Password"
-              className="text-lg"
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <Input
-              type="password"
-              name="password"
-              id="confirmPasswordIdSignup"
-              placeholder="Confirm Password"
-              className="text-lg"
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
-          </div>
+          <Input
+            type="email"
+            name="email"
+            id="emailIdSignup"
+            placeholder="Email"
+            className="text-lg"
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <Input
+            type="password"
+            name="password"
+            id="passwordIdSignup"
+            placeholder="Set Password"
+            className="text-lg"
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <Input
+            type="password"
+            name="password"
+            id="confirmPasswordIdSignup"
+            placeholder="Confirm Password"
+            className="text-lg"
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
           <Link
             to="/auth"
             onClick={handleClick}
@@ -397,7 +434,7 @@ function FormComponent() {
         </Text>
 
         <Text
-          className="text2 text1 absolute left-[40%] max-w-[500px]"
+          className="text2 absolute left-[40%] max-w-[500px]"
           clicked={click}
         >
           <h1>Hi There!</h1>
@@ -407,8 +444,8 @@ function FormComponent() {
           <span className="attention-icon">⤷</span>
         </Text>
 
-        <Box1 clicked={click} />
-        <Box2 clicked={click} />
+        <Box1 clicked={click} windowWidth={windowWidth} />
+        <Box2 clicked={click} windowWidth={windowWidth} />
       </BackgroundBox>
     </div>
   );

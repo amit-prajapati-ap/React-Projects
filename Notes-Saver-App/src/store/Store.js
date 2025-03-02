@@ -4,7 +4,7 @@ import UserAuthSlice from '../features/UserAuthSLice'
 
 export const Store = configureStore({
     reducer: {
-        pastes: PasteSlice,
+        PasteSlice,
         userAuth: UserAuthSlice
     }
 })

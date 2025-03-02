@@ -1,12 +1,12 @@
 import React from 'react'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
-import Home from './components/Home'
-import NavBar from './components/NavBar'
-import ViewPaste from './components/ViewPaste'
-import Pastes from './components/Pastes'
-import Footer from './components/Footer'
+import AuthLayout from './components/AuthLayout'
 import PageNotFound from './components/PageNotFound'
+import HomePage from './pages/HomePage'
 import Navbar from './components/NavBar'
+import Footer from './components/Footer'
+import PastesPage from './pages/PastesPage'
+import ViewPage from './pages/ViewPage'
 import AuthForm from './components/AuthForm'
 
 const router = createBrowserRouter(
@@ -15,36 +15,42 @@ const router = createBrowserRouter(
       path: '/',
       element: 
       <div>
-        <NavBar/>
-        <Home/>
+        <Navbar/>
+        <HomePage/>
         <Footer/>
+      </div>
+    },
+    {
+      path: '/login',
+      element: 
+      <div>
+        <AuthLayout authentication = {false}>
+        <Navbar/>
+        <AuthForm/>
+        <Footer/>
+        </AuthLayout>
       </div>
     },
     {
       path: '/pastes',
       element: 
       <div>
-        <NavBar/>
-        <Pastes/>
+        <AuthLayout authentication errorMessage = "Please Login for Accessing your Pastes">
+        <Navbar/>
+        <PastesPage/>
         <Footer/>
+        </AuthLayout>
       </div>
     },
     {
       path: '/view/:id',
       element: 
       <div>
-        <NavBar/>
-        <ViewPaste/>
+        <AuthLayout authentication errorMessage = "Please Login for View the Paste">
+        <Navbar/>
+        <ViewPage/>
         <Footer/>
-      </div>
-    },
-    {
-      path: '/auth',
-      element: 
-      <div>
-        <NavBar/>
-        <AuthForm/>
-        <Footer/>
+        </AuthLayout>
       </div>
     },
     {
@@ -61,8 +67,10 @@ const router = createBrowserRouter(
 
 const App = () => {
   return (
-    <div className='w-full max-w-[1440px] h-screen mx-auto'>
-      <RouterProvider router={router}/>
+    <div className='w-screen bg-gray-950'>
+      <div className='w-full max-w-[1440px] h-full mx-auto'>
+        <RouterProvider router={router}/>
+      </div>
     </div>
   )
 }
