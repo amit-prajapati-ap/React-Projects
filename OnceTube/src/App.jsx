@@ -1,11 +1,27 @@
-import React from 'react'
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import NavBar from "./components/NavBar";
+import NavBar from "./components/Footer";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <div>
+        <NavBar />
+        <Home />
+        <Footer />
+      </div>
+    ),
+  },
+]);
 
 const App = () => {
   return (
     <div>
-      Hello Duniya
+      <RouterProvider router={router} />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
