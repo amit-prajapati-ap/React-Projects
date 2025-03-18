@@ -1,16 +1,38 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import NavBar from "./components/NavBar";
-import NavBar from "./components/Footer";
+import HomePage from "./pages/HomePage";
+import VideoPage from "./pages/VideoPage";
+import AuthPage from "./pages/AuthPage";
+import Layout from "./components/Layout";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <div>
-        <NavBar />
-        <Home />
-        <Footer />
+        <Layout>
+          <HomePage />
+        </Layout>
+      </div>
+    ),
+  },
+  {
+    path: "/video/:categoryId/:videoId",
+    element: (
+      <div>
+        <Layout>
+          <VideoPage />
+        </Layout>
+      </div>
+    ),
+  },
+  {
+    path: "/authentication",
+    element: (
+      <div>
+        <Layout>
+          <AuthPage />
+        </Layout>
       </div>
     ),
   },
@@ -18,7 +40,7 @@ const router = createBrowserRouter([
 
 const App = () => {
   return (
-    <div>
+    <div className="relative h-full">
       <RouterProvider router={router} />
     </div>
   );
