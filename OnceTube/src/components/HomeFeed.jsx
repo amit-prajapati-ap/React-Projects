@@ -3,20 +3,29 @@ import { AiFillCheckCircle } from "react-icons/ai";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchVideos } from "../youtube/FetchVideos";
 import { setVideos } from "../features/VideosSlice";
+import { API_KEY } from "../youtube/data";
 
 const HomeFeed = () => {
   const [feed, setFeed] = useState([]);
   const videos = useSelector((state) => state.videos.videos);
+  const [pageToken, setPageToken] = useState(null);
 
-  const category = useSelector(state => state.categories.category);
+  const categoryId = useSelector((state) => state.categories.category);
   const dispatch = useDispatch();
 
   const getVideos = async () => {
-    let data = await fetchVideos( {category} );
-    data = [...videos,...data];
-    dispatch(setVideos(data));
+    let url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=10&regionCode=IN&videoCategoryId=${
+      categoryId ? categoryId : 0
+    }&key=${API_KEY}`;
+
+    if (pageToken) {
+      url += `&pageToken=${pageToken}`;
+    }
+    const response = await fetch(url);
+    const data = await response.json();
+    setPageToken((prev) => data.nextPageToken || prev);
+    dispatch(setVideos([...feed, ...data.items]));
   };
 
   useEffect(() => {
@@ -27,6 +36,10 @@ const HomeFeed = () => {
       return prevFeed;
     });
   }, [videos]);
+  
+  useEffect(() => {
+    getVideos();
+  }, []);
 
   function timeAgo(publishedAt) {
     const publishedDate = new Date(publishedAt);
@@ -132,7 +145,12 @@ const HomeFeed = () => {
           </div>
         ))}
       </div>
-      <button onClick={getVideos} className="text-center text-2xl rounded-sm py-2 cursor-pointer px-10 my-2 bg-blue-600 max-w-[250px] mx-auto">Show More</button>
+      <button
+        onClick={getVideos}
+        className="text-center text-2xl rounded-sm py-2 cursor-pointer px-10 my-2 bg-blue-600 max-w-[250px] mx-auto"
+      >
+        Show More
+      </button>
     </div>
   );
 };

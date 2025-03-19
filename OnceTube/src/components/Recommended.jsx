@@ -1,22 +1,28 @@
 import React, { useEffect, useState } from "react";
-import thumbnail1 from "../assets/thumbnail1.png";
 import { AiFillCheckCircle } from "react-icons/ai";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { fetchVideos } from "../youtube/FetchVideos";
 import { Link } from "react-router-dom";
+import {API_KEY} from '../youtube/data'
 
 const Recommended = ({ categoryId }) => {
   const [recommendedVideos, setRecommendedVideos] = useState([]);
+  const [pageToken, setPageToken] = useState(null)
 
   const fetchRecommendedVideos = async () => {
-    const data = await fetchVideos({ category: categoryId });
-    setRecommendedVideos(data);
+    let url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&pageToken=&maxResults=10&regionCode=IN&videoCategoryId=${categoryId ? categoryId : 0}&key=${API_KEY}`;
+
+    if(pageToken != null) {
+      url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&pageToken=${pageToken}&maxResults=50&regionCode=IN&videoCategoryId=${categoryId ? categoryId : 0}&key=${API_KEY}`
+    }
+    const response = await fetch(url);
+    const data = await response.json();
+    setRecommendedVideos(prev => ([...prev,...data.items]));
+    setPageToken(data.nextPageToken ? data.nextPageToken : null);
   };
 
   useEffect(() => {
     fetchRecommendedVideos();
   }, []);
-  console.log(recommendedVideos);
 
   function timeAgo(publishedAt) {
     const publishedDate = new Date(publishedAt);
@@ -121,7 +127,7 @@ const Recommended = ({ categoryId }) => {
       ))}
 
       {/* Show More */}
-      <button className="border border-[#464646] rounded-full py-2 font-[500] text-lg text-blue-400 cursor-pointer hover:bg-[rgba(78,84,170,0.3)] transition-all duration-300">
+      <button onClick={fetchRecommendedVideos} className="border border-[#464646] rounded-full py-2 font-[500] text-lg text-blue-400 cursor-pointer hover:bg-[rgba(78,84,170,0.3)] transition-all duration-300">
         Show more
       </button>
     </div>

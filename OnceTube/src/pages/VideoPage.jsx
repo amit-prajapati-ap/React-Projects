@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom'
 const VideoPage = () => {
   const {videoId, categoryId} = useParams();
   return (
-    <div className='h-full w-full flex gap-2 overflow-y-auto'>
+    <div className='h-[94vh] w-full flex gap-2 overflow-y-auto'>
       <PlayVideo videoId={videoId}/>
       <Recommended categoryId={categoryId}/>
     </div>

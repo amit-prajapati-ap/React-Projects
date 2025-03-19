@@ -10,6 +10,7 @@ const PlayVideo = ({ videoId }) => {
   const [apiData, setApiData] = useState(null);
   const [channelData, setChannelData] = useState(null);
   const [commentData, setCommentData] = useState([]);
+  const [commentsPageToken, setCommentsPageToken] = useState("");
 
   const fetchVideoData = async () => {
     let url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoId}&key=${API_KEY}`;
@@ -23,11 +24,18 @@ const PlayVideo = ({ videoId }) => {
     await fetch(channelUrl)
       .then((response) => response.json())
       .then((data) => setChannelData(data.items[0]));
-
-    const commentUrl = `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&maxResults=100&order=relevance&videoId=${videoId}&key=${API_KEY}`;
-    await fetch(commentUrl)
-      .then((response) => response.json())
-      .then((data) => setCommentData(data.items));
+    fetchCommentsData();
+  };
+  const fetchCommentsData = async () => {
+    if (commentsPageToken != null) {
+      const commentUrl = `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&maxResults=100&order=relevance&pageToken=${commentsPageToken ? commentsPageToken : ''}&videoId=${videoId}&key=${API_KEY}`;
+      await fetch(commentUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          setCommentData((prev) => [...prev, ...data.items]);
+          setCommentsPageToken(data.nextPageToken ? data.nextPageToken : null);
+        });
+      }
   };
 
   useEffect(() => {
@@ -77,16 +85,8 @@ const PlayVideo = ({ videoId }) => {
     }
   }
 
-  function convertISO8601Duration(duration) {
-    const match = duration.match(/PT(\d+M)?(\d+S)?/);
-    const minutes = match[1] ? parseInt(match[1]) : 0;
-    const seconds = match[2] ? parseInt(match[2]) : 0;
-
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-  }
-
   return (
-    <div className="flex flex-col gap-6 m-2 h-[90vh] text-[#ededed]">
+    <div className="flex flex-col gap-6 m-2 text-[#ededed]">
       <div className="flex justify-center bg-black">
         <iframe
           className="w-full h-[600px]"
@@ -207,8 +207,22 @@ const PlayVideo = ({ videoId }) => {
                   >
                     {comment.snippet.topLevelComment.snippet.textOriginal}
                   </p>
-                  <div onClick={() => {setShowMoreComment(prev => !prev)}} className="cursor-pointer text-lg">
-                    {comment.snippet.topLevelComment.snippet.textOriginal.length > 400 ? showMoreComment ? <p>Show Less</p> : <p>Show More</p> : ''}
+                  <div
+                    onClick={() => {
+                      setShowMoreComment((prev) => !prev);
+                    }}
+                    className="cursor-pointer text-lg"
+                  >
+                    {comment.snippet.topLevelComment.snippet.textOriginal
+                      .length > 400 ? (
+                      showMoreComment ? (
+                        <p>Show Less</p>
+                      ) : (
+                        <p>Show More</p>
+                      )
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
 
@@ -227,6 +241,13 @@ const PlayVideo = ({ videoId }) => {
             </div>
           ))}
         </div>
+        {/* Show More */}
+        <button
+          onClick={fetchCommentsData}
+          className="border mx-auto border-[#464646] mb-4 w-32 rounded-full py-2 font-[500] text-lg text-blue-400 cursor-pointer hover:bg-[rgba(78,84,170,0.3)] transition-all duration-300"
+        >
+          Show more
+        </button>
       </div>
     </div>
   );
