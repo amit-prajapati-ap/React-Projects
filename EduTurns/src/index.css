@@ -4,3 +4,21 @@
 *{
     font-family: "Outfit",sans-serif;
 }
+.course-details-heading-large{
+    @apply text-[40px]
+}
+.course-details-heading-small {
+    @apply text-3xl
+}
+.home-heading-small {
+    @apply text-3xl
+}
+.home-heading-large {
+    @apply text-[50px]
+}
+.default {
+    @apply text-lg
+}
+.gridAuto {
+    grid-template-columns: repeat(auto-fit,minmax(200px, 1fr));
+}

@@ -6,6 +6,7 @@ import CourseDetails from "./pages/student/CourseDetails";
 import MyEnrollments from "./pages/student/MyEnrollments";
 import Player from "./pages/student/Player";
 import Loading from "./components/student/Loading";
+import Layout from "./components/Layout";
 import Educator from "./pages/educator/Educator";
 import Dashboard from "./pages/educator/Dashboard";
 import AddCourse from "./pages/educator/AddCourse";
@@ -15,59 +16,91 @@ import StudentsEnrolled from "./pages/educator/StudentsEnrolled";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
+    element: (
+      <Layout>
+        <Home />
+      </Layout>
+    ),
   },
   {
     path: "/course-list",
-    element: <CoursesList />,
+    element: (
+      <Layout>
+        <CoursesList />
+      </Layout>
+    ),
   },
   {
     path: "/course-list/:input",
-    element: <CoursesList />,
+    element: (
+      <Layout>
+        <CoursesList />
+      </Layout>
+    ),
   },
   {
     path: "/course/:id",
-    element: <CourseDetails />,
+    element: (
+      <Layout>
+        <CourseDetails />
+      </Layout>
+    ),
   },
   {
     path: "/my-enrollments",
-    element: <MyEnrollments />,
+    element: (
+      <Layout>
+        <MyEnrollments />
+      </Layout>
+    ),
   },
   {
     path: "/player/:courseId",
-    element: <Player />,
+    element: (
+      <Layout>
+        <Player />
+      </Layout>
+    ),
   },
   {
     path: "/loading/:path",
-    element: <Loading />,
+    element: (
+      <Layout>
+        <Loading />
+      </Layout>
+    ),
   },
   {
     path: "/educator",
-    element: <Educator />,
+    element: (
+      <Layout>
+        <Educator />
+      </Layout>
+    ),
     children: [
       {
         index: true,
-        element: <Dashboard/>
+        element: <Dashboard />,
       },
       {
-        path: 'add-course',
-        element: <AddCourse/>
+        path: "add-course",
+        element: <AddCourse />,
       },
       {
-        path: 'my-courses',
-        element: <MyCourses/>
+        path: "my-courses",
+        element: <MyCourses />,
       },
       {
-        path: 'student-enrolled',
-        element: <StudentsEnrolled/>
+        path: "student-enrolled",
+        element: <StudentsEnrolled />,
       },
-    ]
+    ],
   },
 ]);
 
 const App = () => {
   return (
-    <div>
+    <div className="min-h-screen bg-white">
       <RouterProvider router={router} />
     </div>
   );
