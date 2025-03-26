@@ -2,8 +2,8 @@ import React from 'react'
 
 const Player = () => {
   return (
-    <div>
-      Player Page
+    <div className='min-h-[80vh]'>
+      
     </div>
   )
 }

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import SearchBar from '../../components/student/SearchBar'
 import { useSelector } from 'react-redux'
 import CourseCard from '../../components/student/CourseCard'
 
 const CoursesList = () => {
-  const navigate = useNavigate()
   const {input} = useParams()
   const allCourses = useSelector((state) => state.appContext.appData.allCourses)
   const [filteredCourse, setFilteredCourse] = useState([])
@@ -23,7 +22,6 @@ const CoursesList = () => {
       ;
     }
   }, [allCourses, input])
-  
 
   return (
     <>
