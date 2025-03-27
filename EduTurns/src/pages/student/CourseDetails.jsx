@@ -36,7 +36,7 @@ const CourseDetails = () => {
 
   return courseData ? (
     <>
-      <div className='flex md:flex-row flex-col-reverse gap-10 relative items-start justify-between px-8 md:px-36 md:pt-10 pt-5 text-left'>
+      <div className='flex md:flex-row flex-col-reverse gap-10 relative items-start justify-between px-8 md:px-36 md:pt-10 pt-5 text-left min-h-[80vh]'>
         <div className='h-[500px] absolute top-0 left-0 w-full z-1 bg-gradient-to-b from-cyan-100/70'></div>      
 
         {/* Left Column */}
