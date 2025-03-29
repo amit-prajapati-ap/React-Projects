@@ -10,7 +10,7 @@ const Layout = (props) => {
     <div>
       {!isEducatorRoute && <Navbar />}
       {props.children}
-      <Footer />
+      {!isEducatorRoute && <Footer />}
     </div>
   );
 };

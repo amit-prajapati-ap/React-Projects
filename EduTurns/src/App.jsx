@@ -12,6 +12,8 @@ import Dashboard from "./pages/educator/Dashboard";
 import AddCourse from "./pages/educator/AddCourse";
 import MyCourses from "./pages/educator/MyCourses";
 import StudentsEnrolled from "./pages/educator/StudentsEnrolled";
+import PageNotFound from "./components/PageNotFound";
+import "quill/dist/quill.snow.css";
 
 const router = createBrowserRouter([
   {
@@ -95,6 +97,14 @@ const router = createBrowserRouter([
         element: <StudentsEnrolled />,
       },
     ],
+  },
+  {
+    path: "*",
+    element: (
+      <Layout>
+        <PageNotFound />
+      </Layout>
+    ),
   },
 ]);
 
