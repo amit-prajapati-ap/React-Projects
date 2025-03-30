@@ -64,7 +64,7 @@ const Dashboard = () => {
                 {dashboardData.enrolledStudentsData.map((item, index) => (
                   <tr key={index} className="border-b border-gray-500/20">
                     <td className="px-4 py3 text-center hidden sm:table-cell">{index + 1}</td>
-                    <td className="md:px-4 px2 py3 flex items-center space-x-3">
+                    <td className="md:px-4 px-2 py-3 flex items-center space-x-3">
                       <img src={item.student.imageUrl} className="w-7 h-12 rounded-full" />
                       <span className="truncate">{item.student.name}</span>
                     </td>
