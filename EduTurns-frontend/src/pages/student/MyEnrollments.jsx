@@ -23,7 +23,7 @@ const MyEnrollments = () => {
   }
 
   return (
-    <div className='md:px-36 px-8 pt-10 min-h-[80vh]'>
+    <div className='xl:px-36 px-8 pt-10 min-h-[80vh]'>
       <h1 className='text-2xl font-semibold'>My Enrollments</h1>
       <table className='md:table-auto table-fixed w-full overflow-hidden border border-gray-500/20 mt-10'>
         <thead className='text-gray-900 border-b border-gray-500/20 text-sm text-left max-sm:hidden'>
